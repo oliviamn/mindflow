@@ -10,7 +10,6 @@ export default function NavigationPanel({ onFileSelect }: NavigationPanelProps) 
   const [files, setFiles] = useState<string[]>([]);
 
   useEffect(() => {
-    // For now, we'll list the known HTML files
     setFiles([
       '/html/ChatGPT (2024_12_27 15：56：30).html',
       '/html/DAG存储与执行设计 (2024_12_27 15：56：41).html',
@@ -20,13 +19,21 @@ export default function NavigationPanel({ onFileSelect }: NavigationPanelProps) 
     ]);
   }, []);
 
+  const encodeFilePath = (file: string) => {
+    // Split the path and filename
+    const parts = file.split('/');
+    const filename = parts.pop() || '';
+    // Encode only the filename part
+    return [...parts, encodeURIComponent(filename)].join('/');
+  };
+
   return (
     <div className="flex-1 overflow-y-auto">
       <ul className="py-2">
         {files.map((file) => (
           <li 
             key={file}
-            onClick={() => onFileSelect(file)}
+            onClick={() => onFileSelect(encodeFilePath(file))}
             className="px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-800 
                      cursor-pointer text-sm font-mono"
           >
